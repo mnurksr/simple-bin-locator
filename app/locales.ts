@@ -38,11 +38,11 @@ export const translations: Record<string, Record<string, string>> = {
     de: "Einrichtungsassistent"
   },
   "onboarding.wizard.desc": {
-    en: "To start using Simple Bin Locator, we need to set up how bin locations will be stored in Shopify. This takes just 10 seconds!",
-    tr: "Simple Bin Locator uygulamasını kullanmaya başlamak için raf konumlarını Shopify'da nasıl tutacağımızı ayarlamamız gerekiyor. Bu işlem sadece 10 saniyenizi alacak!",
-    es: "Para empezar a usar Simple Bin Locator, necesitamos configurar cómo se almacenarán las ubicaciones en Shopify. ¡Esto toma solo 10 segundos!",
-    fr: "Pour commencer à utiliser Simple Bin Locator, nous devons configurer le stockage des emplacements dans Shopify. Cela ne prend que 10 secondes!",
-    de: "Um Simple Bin Locator zu nutzen, müssen wir einrichten, wie Behälterstandorte in Shopify gespeichert werden. Das dauert nur 10 Sekunden!"
+    en: "To start using Simple Bin Locations, we need to set up how bin locations will be stored in Shopify. This takes just 10 seconds!",
+    tr: "Simple Bin Locations uygulamasını kullanmaya başlamak için raf konumlarını Shopify'da nasıl tutacağımızı ayarlamamız gerekiyor. Bu işlem sadece 10 saniyenizi alacak!",
+    es: "Para empezar a usar Simple Bin Locations, necesitamos configurar cómo se almacenarán las ubicaciones en Shopify. ¡Esto toma solo 10 segundos!",
+    fr: "Pour commencer à utiliser Simple Bin Locations, nous devons configurer le stockage des emplacements dans Shopify. Cela ne prend que 10 secondes!",
+    de: "Um Simple Bin Locations zu nutzen, müssen wir einrichten, wie Behälterstandorte in Shopify gespeichert werden. Das dauert nur 10 Sekunden!"
   },
   "onboarding.settings.title": {
     en: "Bin Location Settings",

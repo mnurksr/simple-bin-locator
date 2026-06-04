@@ -19,7 +19,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   switch (topic) {
     case "CUSTOMERS_DATA_REQUEST":
-      // Simple Bin Locator does not store any personal customer data.
+      // Simple Bin Locations does not store any personal customer data.
       // We only store order IDs and bin locations in ProcessedOrder.
       // Respond with acknowledgment — no customer data to export.
       console.log(
@@ -28,7 +28,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
 
     case "CUSTOMERS_REDACT":
-      // Simple Bin Locator does not store personal customer data.
+      // Simple Bin Locations does not store personal customer data.
       // ProcessedOrder records contain only order IDs and bin locations.
       // No action needed, but we log the request for compliance auditing.
       console.log(

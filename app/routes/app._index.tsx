@@ -127,7 +127,7 @@ export default function Dashboard() {
   };
 
   return (
-    <s-page heading="Simple Bin Locator">
+    <s-page heading="Simple Bin Locations">
       <s-button
         slot="primary-action"
         variant={isActive ? "secondary" : "primary"}

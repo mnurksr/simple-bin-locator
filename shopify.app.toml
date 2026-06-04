@@ -3,13 +3,14 @@
 client_id = "5982c6d2935e7d1855863535e6e5f77e"
 application_url = "https://bin-locator.mercsync.com"
 embedded = true
-name = "Simple Bin Locator"
+name = "Simple Bin Locations"
 
 [access_scopes]
 # read_orders: Process order webhook payloads
 # write_orders: Update order notes with bin locations via orderUpdate mutation
 # read_products: Read variant metafields for warehouse bin locations
-scopes = "read_orders,write_orders,read_products"
+# write_products: Update variant metafields from the Bins Management UI
+scopes = "read_orders,write_orders,read_products,write_products"
 
 [webhooks]
 api_version = "2026-07"
