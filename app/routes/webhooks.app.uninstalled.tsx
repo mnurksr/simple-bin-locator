@@ -13,5 +13,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     await db.session.deleteMany({ where: { shop } });
   }
 
+  // Also delete the shop's AppSettings and ProcessedOrders so that if they reinstall, they start fresh.
+  try {
+    await db.appSettings.deleteMany({ where: { shop } });
+    await db.processedOrder.deleteMany({ where: { shop } });
+    console.log(`Successfully cleared data for uninstalled shop: ${shop}`);
+  } catch (error) {
+    console.error(`Error clearing data for uninstalled shop ${shop}:`, error);
+  }
+
   return new Response();
 };
