@@ -1,0 +1,35 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "5982c6d2935e7d1855863535e6e5f77e"
+application_url = "https://example.com"
+embedded = true
+name = "Simple Bin Locator"
+
+[access_scopes]
+# read_orders: Process order webhook payloads
+# write_orders: Update order notes with bin locations via orderUpdate mutation
+# read_products: Read variant metafields for warehouse bin locations
+scopes = "read_orders,write_orders,read_products"
+
+[webhooks]
+api_version = "2026-07"
+
+#  [[webhooks.subscriptions]]
+#  uri = "/webhooks/orders-create"
+#  topics = [ "orders/create" ]
+#  include_fields = ["id", "admin_graphql_api_id", "line_items"]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/uninstalled"
+  topics = [ "app/uninstalled" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/scopes_update"
+  topics = [ "app/scopes_update" ]
+
+[auth]
+redirect_urls = [ "https://example.com/api/auth" ]
+
+[build]
+include_config_on_deploy = true
+automatically_update_urls_on_dev = true
