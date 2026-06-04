@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
-import { useLoaderData, useFetcher, useNavigate } from "react-router";
+import { useLoaderData, useFetcher, useNavigate, useOutletContext } from "react-router";
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
 import {
@@ -59,6 +59,7 @@ export default function Settings() {
   const { settings, isConfigured } = useLoaderData<any>();
   const fetcher = useFetcher<any>();
   const navigate = useNavigate();
+  const { t } = useOutletContext<any>();
 
   const isSaving = fetcher.state !== "idle";
 
@@ -73,14 +74,13 @@ export default function Settings() {
   useEffect(() => {
     if (fetcher.data?.success) {
       if (!isConfigured) {
-        // If it was the first time setup, redirect to Bins Management
-        shopify.toast.show("Kurulum tamamlandı!");
+        shopify.toast.show(t("bins.toast.setup"));
         navigate("/app/bins");
       } else {
-        shopify.toast.show("Ayarlar başarıyla kaydedildi.");
+        shopify.toast.show(t("bins.toast.saved"));
       }
     }
-  }, [fetcher.data, isConfigured, navigate]);
+  }, [fetcher.data, isConfigured, navigate, t]);
 
   const handleSave = useCallback(() => {
     const formData = new FormData();
@@ -99,30 +99,30 @@ export default function Settings() {
 
   if (!isConfigured) {
     return (
-      <Page title="Hoş Geldiniz! 👋" narrowWidth>
+      <Page title={t("onboarding.welcome")} narrowWidth>
         <Layout>
           <Layout.Section>
             <BlockStack gap="400">
-              <Banner title="Kurulum Sihirbazı" tone="info">
-                Simple Bin Locator uygulamasını kullanmaya başlamak için raf konumlarını Shopify'da nasıl tutacağımızı ayarlamamız gerekiyor. Bu işlem sadece 10 saniyenizi alacak!
+              <Banner title={t("onboarding.wizard.title")} tone="info">
+                {t("onboarding.wizard.desc")}
               </Banner>
 
               <Card>
                 <BlockStack gap="500">
-                  <Text as="h2" variant="headingMd">Raf Konumu Ayarları</Text>
+                  <Text as="h2" variant="headingMd">{t("onboarding.settings.title")}</Text>
                   
                   <ChoiceList
-                    title="Daha önce Shopify'da ürünleriniz için bir 'Raf Konumu' metafield'ı oluşturmuş muydunuz?"
+                    title={t("onboarding.choice.title")}
                     choices={[
                       {
-                        label: 'Hayır, benim için her şeyi otomatik oluştur',
+                        label: t("onboarding.choice.auto"),
                         value: 'auto',
-                        helpText: "Uygulama sizin için arka planda her şeyi ayarlar. Önerilen."
+                        helpText: t("onboarding.choice.auto.help")
                       },
                       {
-                        label: 'Evet, halihazırda kullandığım bir metafield var',
+                        label: t("onboarding.choice.custom"),
                         value: 'custom',
-                        helpText: "Kendi kullandığınız Namespace ve Key değerlerini girebilirsiniz."
+                        helpText: t("onboarding.choice.custom.help")
                       },
                     ]}
                     selected={setupType}
@@ -133,7 +133,7 @@ export default function Settings() {
                     <Box paddingBlockStart="300">
                       <BlockStack gap="400">
                         <Text as="p" tone="subdued">
-                          Kullandığınız metafield bilgilerini aşağıya girin.
+                          {t("onboarding.custom.instruction")}
                         </Text>
                         <InlineStack gap="400">
                           <TextField
@@ -163,7 +163,7 @@ export default function Settings() {
                       loading={isSaving}
                       fullWidth
                     >
-                      Kurulumu Tamamla ve Başla
+                      {t("onboarding.button.finish")}
                     </Button>
                   </Box>
                 </BlockStack>
@@ -178,9 +178,9 @@ export default function Settings() {
   // Normal Settings Page for Configured Users
   return (
     <Page
-      title="Ayarlar"
+      title={t("settings.title")}
       primaryAction={{
-        content: "Değişiklikleri Kaydet",
+        content: t("settings.save"),
         onAction: handleSave,
         loading: isSaving,
       }}
@@ -190,9 +190,9 @@ export default function Settings() {
           <BlockStack gap="500">
             <Card>
               <BlockStack gap="400">
-                <Text as="h2" variant="headingMd">Metafield Yapılandırması</Text>
+                <Text as="h2" variant="headingMd">{t("settings.metafield.title")}</Text>
                 <Text as="p" tone="subdued">
-                  Ürün varyantlarınızdaki raf konumu metafield'ının namespace ve key değerlerini girin. Bu değerler, webhook tetiklendiğinde ve Raf Yönetimi ekranında hangi alanın kullanılacağını belirler.
+                  {t("settings.metafield.desc")}
                 </Text>
                 
                 <InlineStack gap="400">
@@ -220,14 +220,14 @@ export default function Settings() {
 
             <Card>
               <BlockStack gap="400">
-                <Text as="h2" variant="headingMd">Sipariş Notu Formatı</Text>
+                <Text as="h2" variant="headingMd">{t("settings.note.title")}</Text>
                 
                 <TextField
-                  label="Not Başlığı"
+                  label={t("settings.note.label")}
                   value={notePrefix}
                   onChange={setNotePrefix}
                   autoComplete="off"
-                  helpText="Sipariş notunun başına eklenecek başlık metni"
+                  helpText={t("settings.note.help")}
                 />
 
                 <Box
@@ -236,11 +236,11 @@ export default function Settings() {
                   borderRadius="200"
                 >
                   <BlockStack gap="200">
-                    <Text as="h3" variant="headingSm">Önizleme:</Text>
+                    <Text as="h3" variant="headingSm">{t("settings.preview")}</Text>
                     <div style={{ whiteSpace: "pre-wrap", fontSize: "13px", fontFamily: "monospace" }}>
                       {notePrefix || "📦 RAF KONUMLARI:"}
-                      {"\n"}• [SKU-001] Örnek Ürün (Kırmızı / M) → A-12-3 (x2)
-                      {"\n"}• [SKU-002] Başka Ürün (Mavi / L) → B-05-1 (x1)
+                      {"\n"}{t("settings.preview.example1")}
+                      {"\n"}{t("settings.preview.example2")}
                     </div>
                   </BlockStack>
                 </Box>
@@ -252,14 +252,14 @@ export default function Settings() {
         <Layout.Section variant="oneThird">
           <Card>
             <BlockStack gap="400">
-              <Text as="h2" variant="headingMd">Yardım</Text>
-              <Text as="h3" variant="headingSm">Metafield Nedir?</Text>
+              <Text as="h2" variant="headingMd">{t("settings.help.title")}</Text>
+              <Text as="h3" variant="headingSm">{t("settings.help.metafield")}</Text>
               <Text as="p">
-                Metafield'lar, Shopify ürün varyantlarına eklenen özel veri alanlarıdır. Raf konumlarını saklamak için her varyanta bir metafield atamanız gerekir.
+                {t("settings.help.metafield.desc")}
               </Text>
-              <Text as="h3" variant="headingSm">Raf Yönetimi</Text>
+              <Text as="h3" variant="headingSm">{t("settings.help.bins")}</Text>
               <Text as="p">
-                Uygulamamızın "Raf Yönetimi" sayfası sayesinde Shopify ayarlarına hiç girmeden tüm ürünlerinizin raf konumlarını tek bir ekrandan kolayca yönetebilirsiniz.
+                {t("settings.help.bins.desc")}
               </Text>
             </BlockStack>
           </Card>

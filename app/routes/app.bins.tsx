@@ -1,12 +1,10 @@
 import { type ActionFunctionArgs, type LoaderFunctionArgs } from "react-router";
-import { useActionData, useLoaderData, useSubmit, useNavigation } from "react-router";
+import { useActionData, useLoaderData, useSubmit, useNavigation, useOutletContext } from "react-router";
 import {
   Page,
-  Layout,
   Card,
   IndexTable,
   TextField,
-  Button,
   Text,
   Badge,
   Banner,
@@ -119,7 +117,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     });
   } catch (error) {
     console.error("Error fetching products for bin management", error);
-    return Response.json({ variants: [], namespace, key, error: "Ürünler getirilirken bir hata oluştu." });
+    return Response.json({ variants: [], namespace, key, error: "FETCH_ERROR" });
   }
 }
 
@@ -129,14 +127,14 @@ export async function action({ request }: ActionFunctionArgs) {
   const updatesRaw = formData.get("updates");
   
   if (!updatesRaw) {
-    return Response.json({ success: false, error: "Gönderilecek veri bulunamadı." }, { status: 400 });
+    return Response.json({ success: false, error: "NO_DATA" }, { status: 400 });
   }
 
   try {
     const updates = JSON.parse(updatesRaw as string);
     
     if (!Array.isArray(updates) || updates.length === 0) {
-      return Response.json({ success: false, error: "Geçerli bir güncelleme listesi yok." }, { status: 400 });
+      return Response.json({ success: false, error: "INVALID_LIST" }, { status: 400 });
     }
 
     // Get namespace and key
@@ -166,23 +164,24 @@ export async function action({ request }: ActionFunctionArgs) {
       console.error("Metafield Set Errors:", responseJson.data.metafieldsSet.userErrors);
       return Response.json({ 
         success: false, 
-        error: "Bazı konumlar güncellenirken Shopify tarafında hata oluştu.",
+        error: "SHOPIFY_ERROR",
         details: responseJson.data.metafieldsSet.userErrors 
       }, { status: 400 });
     }
 
-    return Response.json({ success: true, message: `${updates.length} ürün başarıyla güncellendi!` });
+    return Response.json({ success: true, count: updates.length });
   } catch (error) {
     console.error("Error updating bin locations:", error);
-    return Response.json({ success: false, error: "Sunucu tarafında bir hata oluştu." }, { status: 500 });
+    return Response.json({ success: false, error: "SERVER_ERROR" }, { status: 500 });
   }
 }
 
 export default function BinsManagement() {
-  const { variants, namespace, key, error: loaderError } = useLoaderData<any>();
+  const { variants, namespace, key, error: loaderErrorCode } = useLoaderData<any>();
   const actionData = useActionData<any>();
   const submit = useSubmit();
   const navigation = useNavigation();
+  const { t } = useOutletContext<any>();
   
   const isSaving = navigation.state === "submitting";
 
@@ -241,6 +240,21 @@ export default function BinsManagement() {
     }
   }, [actionData]);
 
+  // Get localized error messages
+  const getErrorMessage = (code: string) => {
+    switch (code) {
+      case "FETCH_ERROR": return t("bins.error.fetch");
+      case "NO_DATA": return t("bins.error.nodata");
+      case "INVALID_LIST": return t("bins.error.invalid");
+      case "SHOPIFY_ERROR": return t("bins.error.shopify");
+      case "SERVER_ERROR": return t("bins.error.server");
+      default: return code;
+    }
+  };
+
+  const loaderError = loaderErrorCode ? getErrorMessage(loaderErrorCode) : null;
+  const actionError = actionData?.error ? getErrorMessage(actionData.error) : null;
+
   // Prepare table rows
   const rowMarkup = variants.map(
     (variant: any, index: number) => {
@@ -280,22 +294,22 @@ export default function BinsManagement() {
           <IndexTable.Cell>
             <div style={{ maxWidth: "200px" }}>
               <TextField
-                label="Raf Konumu"
+                label={t("bins.col.bin")}
                 labelHidden
                 value={currentValue}
                 onChange={(val) => handleBinChange(variant.variantId, val)}
                 autoComplete="off"
-                placeholder="Örn: A-12-3"
+                placeholder={t("bins.placeholder")}
               />
             </div>
           </IndexTable.Cell>
           <IndexTable.Cell>
             {isChanged ? (
-              <Badge tone="info">Değiştirildi (Kaydedilmedi)</Badge>
+              <Badge tone="info">{t("bins.badge.changed")}</Badge>
             ) : variant.currentBinLocation ? (
-              <Badge tone="success">Atandı</Badge>
+              <Badge tone="success">{t("bins.badge.assigned")}</Badge>
             ) : (
-              <Badge tone="warning">Boş</Badge>
+              <Badge tone="warning">{t("bins.badge.empty")}</Badge>
             )}
           </IndexTable.Cell>
         </IndexTable.Row>
@@ -305,10 +319,10 @@ export default function BinsManagement() {
 
   return (
     <Page
-      title="Toplu Raf Yönetimi"
-      subtitle="Ürünlerinizin depo veya mağaza içi raf konumlarını hızlıca belirleyin."
+      title={t("bins.title")}
+      subtitle={t("bins.subtitle")}
       primaryAction={{
-        content: "Değişiklikleri Kaydet",
+        content: t("bins.save"),
         onAction: handleSave,
         disabled: !hasChanges,
         loading: isSaving,
@@ -316,30 +330,30 @@ export default function BinsManagement() {
     >
       <BlockStack gap="500">
         {loaderError && (
-          <Banner title="Veri Hatası" tone="critical">
+          <Banner title="Error" tone="critical">
             {loaderError}
           </Banner>
         )}
 
         {actionData && (
           <Banner 
-            title={actionData.success ? "Başarılı!" : "Hata"} 
+            title={actionData.success ? "Success" : "Error"} 
             tone={actionData.success ? "success" : "critical"}
             onDismiss={() => {}} // In a real app we'd clear the actionData
           >
-            {actionData.message || actionData.error}
+            {actionData.success ? t("bins.success.message", { count: actionData.count }) : actionError}
           </Banner>
         )}
 
         <Card padding="0">
           <IndexTable
-            resourceName={{ singular: 'ürün', plural: 'ürünler' }}
+            resourceName={{ singular: 'product', plural: 'products' }}
             itemCount={variants.length}
             headings={[
-              { title: 'Ürün' },
-              { title: 'SKU' },
-              { title: `Raf Konumu (${namespace}.${key})` },
-              { title: 'Durum' },
+              { title: t("bins.col.product") },
+              { title: t("bins.col.sku") },
+              { title: `${t("bins.col.bin")} (${namespace}.${key})` },
+              { title: t("bins.col.status") },
             ]}
             selectable={false}
           >

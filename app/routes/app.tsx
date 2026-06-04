@@ -5,6 +5,7 @@ import { AppProvider } from "@shopify/shopify-app-react-router/react";
 
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
+import { getT } from "../locales";
 
 import { AppProvider as PolarisAppProvider } from "@shopify/polaris";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
@@ -39,6 +40,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function App() {
   const { apiKey, locale, isConfigured } = useLoaderData<typeof loader>();
   
+  // Custom translation function
+  const t = getT(locale);
+  
   // Select translation based on Shopify locale
   let translations = enTranslations;
   if (locale.startsWith("tr")) translations = trTranslations;
@@ -53,14 +57,14 @@ export default function App() {
           {isConfigured && (
             <>
               <Link to="/app" rel="home">
-                Anasayfa
+                {t("nav.home")}
               </Link>
-              <Link to="/app/bins">Raf Yönetimi</Link>
+              <Link to="/app/bins">{t("nav.bins")}</Link>
             </>
           )}
-          <Link to="/app/settings">Ayarlar</Link>
+          <Link to="/app/settings">{t("nav.settings")}</Link>
         </ui-nav-menu>
-        <Outlet />
+        <Outlet context={{ t, locale }} />
       </PolarisAppProvider>
     </AppProvider>
   );
