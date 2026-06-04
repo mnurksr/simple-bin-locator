@@ -14,10 +14,10 @@ scopes = "read_orders,write_orders,read_products"
 [webhooks]
 api_version = "2026-07"
 
-#  [[webhooks.subscriptions]]
-#  uri = "/webhooks/orders-create"
-#  topics = [ "orders/create" ]
-#  include_fields = ["id", "admin_graphql_api_id", "line_items"]
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/orders-create"
+  topics = [ "orders/create" ]
+  include_fields = ["id", "admin_graphql_api_id", "line_items"]
 
   [[webhooks.subscriptions]]
   uri = "/webhooks/app/uninstalled"
