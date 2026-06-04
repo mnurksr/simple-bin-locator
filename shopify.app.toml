@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "5982c6d2935e7d1855863535e6e5f77e"
-application_url = "https://example.com"
+application_url = "https://bin-locator.mercsync.com"
 embedded = true
 name = "Simple Bin Locator"
 
@@ -28,8 +28,11 @@ api_version = "2026-07"
   topics = [ "app/scopes_update" ]
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [
+  "https://bin-locator.mercsync.com/auth/callback",
+  "https://bin-locator.mercsync.com/auth/shopify/callback",
+  "https://bin-locator.mercsync.com/api/auth/callback"
+]
 
 [build]
-include_config_on_deploy = true
 automatically_update_urls_on_dev = true
