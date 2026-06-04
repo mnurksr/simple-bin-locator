@@ -30,7 +30,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const pathname = new URL(request.url).pathname;
 
   if (!isConfigured && !pathname.endsWith("/settings")) {
-    throw redirect("/app/settings");
+    const url = new URL(request.url);
+    throw redirect(`/app/settings?${url.searchParams.toString()}`);
   }
 
   // eslint-disable-next-line no-undef
