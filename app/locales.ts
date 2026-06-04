@@ -335,6 +335,190 @@ export const translations: Record<string, Record<string, string>> = {
     fr: "Configuration terminée!",
     de: "Einrichtung abgeschlossen!"
   },
+  // Dashboard Page
+  "dashboard.toggle.stop": {
+    en: "Stop Automation",
+    tr: "Otomasyonu Durdur",
+    es: "Detener Automatización",
+    fr: "Arrêter l'automatisation",
+    de: "Automatisierung stoppen"
+  },
+  "dashboard.toggle.start": {
+    en: "Start Automation",
+    tr: "Otomasyonu Başlat",
+    es: "Iniciar Automatización",
+    fr: "Démarrer l'automatisation",
+    de: "Automatisierung starten"
+  },
+  "dashboard.status.active": {
+    en: "✅ Automation is Active",
+    tr: "✅ Otomasyon Aktif",
+    es: "✅ Automatización Activa",
+    fr: "✅ Automatisation Active",
+    de: "✅ Automatisierung ist aktiv"
+  },
+  "dashboard.status.paused": {
+    en: "⏸️ Automation is Paused",
+    tr: "⏸️ Otomasyon Duraklatıldı",
+    es: "⏸️ Automatización en Pausa",
+    fr: "⏸️ Automatisation en Pause",
+    de: "⏸️ Automatisierung ist pausiert"
+  },
+  "dashboard.status.active.desc": {
+    en: "New orders are automatically tagged with bin locations.",
+    tr: "Yeni siparişler otomatik olarak raf konumlarıyla etiketleniyor.",
+    es: "Los nuevos pedidos se etiquetan automáticamente con ubicaciones.",
+    fr: "Les nouvelles commandes sont automatiquement étiquetées avec les emplacements.",
+    de: "Neue Bestellungen werden automatisch mit Behälterstandorten markiert."
+  },
+  "dashboard.status.paused.desc": {
+    en: "New orders will not be processed. Use the button above to start.",
+    tr: "Yeni siparişler işlenmeyecek. Başlatmak için yukarıdaki butonu kullanın.",
+    es: "Los nuevos pedidos no serán procesados. Usa el botón de arriba para iniciar.",
+    fr: "Les nouvelles commandes ne seront pas traitées. Utilisez le bouton ci-dessus pour démarrer.",
+    de: "Neue Bestellungen werden nicht verarbeitet. Verwenden Sie die Schaltfläche oben zum Starten."
+  },
+  "dashboard.stats.title": {
+    en: "Statistics",
+    tr: "İstatistikler",
+    es: "Estadísticas",
+    fr: "Statistiques",
+    de: "Statistiken"
+  },
+  "dashboard.stats.total": {
+    en: "Total Processed",
+    tr: "Toplam İşlenen",
+    es: "Total Procesado",
+    fr: "Total Traité",
+    de: "Gesamt verarbeitet"
+  },
+  "dashboard.stats.success": {
+    en: "Success",
+    tr: "Başarılı",
+    es: "Éxito",
+    fr: "Succès",
+    de: "Erfolg"
+  },
+  "dashboard.stats.error": {
+    en: "Error",
+    tr: "Hata",
+    es: "Error",
+    fr: "Erreur",
+    de: "Fehler"
+  },
+  "dashboard.stats.skipped": {
+    en: "Skipped",
+    tr: "Atlandı",
+    es: "Omitido",
+    fr: "Ignoré",
+    de: "Übersprungen"
+  },
+  "dashboard.config.title": {
+    en: "Configuration",
+    tr: "Yapılandırma",
+    es: "Configuración",
+    fr: "Configuration",
+    de: "Konfiguration"
+  },
+  "dashboard.config.edit": {
+    en: "Edit Settings",
+    tr: "Ayarları Düzenle",
+    es: "Editar Ajustes",
+    fr: "Modifier les paramètres",
+    de: "Einstellungen bearbeiten"
+  },
+  "dashboard.how.title": {
+    en: "How it works?",
+    tr: "Nasıl Çalışır?",
+    es: "¿Cómo funciona?",
+    fr: "Comment ça marche?",
+    de: "Wie es funktioniert?"
+  },
+  "dashboard.how.1": {
+    en: "Customer places an order",
+    tr: "Müşteri sipariş verir",
+    es: "El cliente hace un pedido",
+    fr: "Le client passe une commande",
+    de: "Kunde gibt eine Bestellung auf"
+  },
+  "dashboard.how.2": {
+    en: "Webhook is triggered",
+    tr: "Webhook tetiklenir",
+    es: "Se activa el webhook",
+    fr: "Le webhook est déclenché",
+    de: "Webhook wird ausgelöst"
+  },
+  "dashboard.how.3": {
+    en: "Variant metafields are fetched",
+    tr: "Varyant metafield'ları çekilir",
+    es: "Se obtienen los metacampos",
+    fr: "Les champs méta des variantes sont récupérés",
+    de: "Varianten-Metafelder werden abgerufen"
+  },
+  "dashboard.how.4": {
+    en: "Bin locations are written to order note",
+    tr: "Raf konumları sipariş notuna yazılır",
+    es: "Las ubicaciones se escriben en la nota",
+    fr: "Les emplacements sont écrits dans la note",
+    de: "Behälterstandorte werden in die Notiz geschrieben"
+  },
+  "dashboard.orders.title": {
+    en: "Recently Processed Orders",
+    tr: "Son İşlenen Siparişler",
+    es: "Pedidos Recientes",
+    fr: "Commandes récemment traitées",
+    de: "Zuletzt verarbeitete Bestellungen"
+  },
+  "dashboard.orders.empty.title": {
+    en: "No orders processed yet",
+    tr: "Henüz işlenen sipariş yok",
+    es: "Aún no hay pedidos",
+    fr: "Aucune commande traitée",
+    de: "Noch keine Bestellungen verarbeitet"
+  },
+  "dashboard.orders.empty.desc": {
+    en: "When a new order is created, its bin locations will appear here.",
+    tr: "Yeni bir sipariş oluşturulduğunda, raf konumları burada görünecek.",
+    es: "Cuando se cree un nuevo pedido, aparecerá aquí.",
+    fr: "Lorsqu'une nouvelle commande est créée, elle apparaîtra ici.",
+    de: "Wenn eine neue Bestellung erstellt wird, erscheint sie hier."
+  },
+  "dashboard.orders.col.order": {
+    en: "Order",
+    tr: "Sipariş",
+    es: "Pedido",
+    fr: "Commande",
+    de: "Bestellung"
+  },
+  "dashboard.orders.col.status": {
+    en: "Status",
+    tr: "Durum",
+    es: "Estado",
+    fr: "Statut",
+    de: "Status"
+  },
+  "dashboard.orders.col.bins": {
+    en: "Bin Locations",
+    tr: "Raf Konumları",
+    es: "Ubicaciones",
+    fr: "Emplacements",
+    de: "Behälterstandorte"
+  },
+  "dashboard.orders.col.date": {
+    en: "Date",
+    tr: "Tarih",
+    es: "Fecha",
+    fr: "Date",
+    de: "Datum"
+  },
+  "dashboard.orders.status.pending": {
+    en: "Pending",
+    tr: "Bekliyor",
+    es: "Pendiente",
+    fr: "En attente",
+    de: "Ausstehend"
+  },
+
   "bins.toast.saved": {
     en: "Settings saved successfully.",
     tr: "Ayarlar başarıyla kaydedildi.",

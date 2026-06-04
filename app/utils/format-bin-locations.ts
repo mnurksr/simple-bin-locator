@@ -24,7 +24,7 @@ export interface BinLocationLineItem {
  *
  * @example
  * ```
- * 📦 RAF KONUMLARI:
+ * 📦 BIN LOCATIONS:
  * • [SKU-001] Ürün Adı (Varyant) → A-12-3 (x2)
  * • [SKU-002] Diğer Ürün (Varyant) → B-05-1 (x1)
  * ```
@@ -57,5 +57,5 @@ export function formatBinLocations(items: BinLocationLineItem[]): string {
     return `• [${sku}] ${item.productTitle}${variant} → ${item.binLocation} (x${item.quantity})`;
   });
 
-  return `📦 RAF KONUMLARI:\n${lines.join("\n")}`;
+  return `📦 BIN LOCATIONS:\n${lines.join("\n")}`;
 }

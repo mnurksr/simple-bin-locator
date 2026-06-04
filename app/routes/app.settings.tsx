@@ -31,7 +31,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       metafieldNamespace: "warehouse",
       metafieldKey: "bin_location",
       isActive: true,
-      notePrefix: "📦 RAF KONUMLARI:",
+      notePrefix: "📦 BIN LOCATIONS:",
     },
   });
 };
@@ -43,7 +43,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const metafieldNamespace = (formData.get("metafieldNamespace") as string) || "warehouse";
   const metafieldKey = (formData.get("metafieldKey") as string) || "bin_location";
-  const notePrefix = (formData.get("notePrefix") as string) || "📦 RAF KONUMLARI:";
+  const notePrefix = (formData.get("notePrefix") as string) || "📦 BIN LOCATIONS:";
   const isActive = formData.get("isActive") !== "false";
 
   await db.appSettings.upsert({
@@ -238,7 +238,7 @@ export default function Settings() {
                   <BlockStack gap="200">
                     <Text as="h3" variant="headingSm">{t("settings.preview")}</Text>
                     <div style={{ whiteSpace: "pre-wrap", fontSize: "13px", fontFamily: "monospace" }}>
-                      {notePrefix || "📦 RAF KONUMLARI:"}
+                      {notePrefix || "📦 BIN LOCATIONS:"}
                       {"\n"}{t("settings.preview.example1")}
                       {"\n"}{t("settings.preview.example2")}
                     </div>

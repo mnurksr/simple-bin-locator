@@ -4,7 +4,7 @@ import type {
   HeadersFunction,
   LoaderFunctionArgs,
 } from "react-router";
-import { useLoaderData, useFetcher } from "react-router";
+import { useLoaderData, useFetcher, useOutletContext } from "react-router";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import { boundary } from "@shopify/shopify-app-react-router/server";
@@ -81,6 +81,7 @@ export default function Dashboard() {
     useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
   const shopify = useAppBridge();
+  const { t, locale } = useOutletContext<any>();
 
   const isToggling =
     fetcher.state !== "idle" &&
@@ -89,10 +90,10 @@ export default function Dashboard() {
   useEffect(() => {
     if (fetcher.data?.success && fetcher.data?.action === "toggle") {
       shopify.toast.show(
-        isActive ? "Otomasyon duraklatıldı" : "Otomasyon aktifleştirildi"
+        isActive ? t("dashboard.status.paused") : t("dashboard.status.active")
       );
     }
-  }, [fetcher.data, isActive, shopify]);
+  }, [fetcher.data, isActive, shopify, t]);
 
   const toggleApp = () => {
     fetcher.submit({ actionType: "toggle" }, { method: "POST" });
@@ -114,13 +115,13 @@ export default function Dashboard() {
   const getStatusLabel = (status: string) => {
     switch (status) {
       case "success":
-        return "Başarılı";
+        return t("dashboard.stats.success");
       case "failed":
-        return "Hata";
+        return t("dashboard.stats.error");
       case "skipped":
-        return "Atlandı";
+        return t("dashboard.stats.skipped");
       case "pending":
-        return "Bekliyor";
+        return t("dashboard.orders.status.pending");
       default:
         return status;
     }
@@ -134,7 +135,7 @@ export default function Dashboard() {
         onClick={toggleApp}
         {...(isToggling ? { loading: true } : {})}
       >
-        {isActive ? "Otomasyonu Durdur" : "Otomasyonu Başlat"}
+        {isActive ? t("dashboard.toggle.stop") : t("dashboard.toggle.start")}
       </s-button>
 
       {/* Status Banner */}
@@ -148,43 +149,43 @@ export default function Dashboard() {
             <s-text>
               <span style={{ fontWeight: 600 }}>
                 {isActive
-                  ? "✅ Otomasyon Aktif"
-                  : "⏸️ Otomasyon Duraklatıldı"}
+                  ? t("dashboard.status.active")
+                  : t("dashboard.status.paused")}
               </span>
             </s-text>
           </s-stack>
           <s-text>
             {isActive
-              ? "Yeni siparişler otomatik olarak raf konumlarıyla etiketleniyor."
-              : "Yeni siparişler işlenmeyecek. Başlatmak için yukarıdaki butonu kullanın."}
+              ? t("dashboard.status.active.desc")
+              : t("dashboard.status.paused.desc")}
           </s-text>
         </s-box>
       </s-section>
 
       {/* Stats Cards */}
-      <s-section heading="İstatistikler">
+      <s-section heading={t("dashboard.stats.title")}>
         <s-stack direction="inline" gap="base">
           <s-box padding="base" borderWidth="base" borderRadius="base" minInlineSize="200px">
-            <s-text><span style={{ fontSize: "12px" }}>Toplam İşlenen</span></s-text>
+            <s-text><span style={{ fontSize: "12px" }}>{t("dashboard.stats.total")}</span></s-text>
             <s-heading>{stats.totalProcessed}</s-heading>
           </s-box>
           <s-box padding="base" borderWidth="base" borderRadius="base" minInlineSize="200px">
-            <s-text><span style={{ fontSize: "12px" }}>Başarılı</span></s-text>
+            <s-text><span style={{ fontSize: "12px" }}>{t("dashboard.stats.success")}</span></s-text>
             <s-heading>{stats.totalSuccess}</s-heading>
           </s-box>
           <s-box padding="base" borderWidth="base" borderRadius="base" minInlineSize="200px">
-            <s-text><span style={{ fontSize: "12px" }}>Hata</span></s-text>
+            <s-text><span style={{ fontSize: "12px" }}>{t("dashboard.stats.error")}</span></s-text>
             <s-heading>{stats.totalFailed}</s-heading>
           </s-box>
           <s-box padding="base" borderWidth="base" borderRadius="base" minInlineSize="200px">
-            <s-text><span style={{ fontSize: "12px" }}>Atlandı</span></s-text>
+            <s-text><span style={{ fontSize: "12px" }}>{t("dashboard.stats.skipped")}</span></s-text>
             <s-heading>{stats.totalSkipped}</s-heading>
           </s-box>
         </s-stack>
       </s-section>
 
       {/* Configuration Info */}
-      <s-section slot="aside" heading="Yapılandırma">
+      <s-section slot="aside" heading={t("dashboard.config.title")}>
         <s-stack direction="block" gap="base">
           <s-text>
             Metafield Namespace:{" "}
@@ -195,36 +196,35 @@ export default function Dashboard() {
             <strong>{settings?.metafieldKey ?? "bin_location"}</strong>
           </s-text>
           <s-text>
-            Not Başlığı:{" "}
-            <strong>{settings?.notePrefix ?? "📦 RAF KONUMLARI:"}</strong>
+            Note Prefix:{" "}
+            <strong>{settings?.notePrefix ?? "📦 BIN LOCATIONS:"}</strong>
           </s-text>
         </s-stack>
         <s-box paddingBlockStart="base">
           <s-button href="/app/settings" variant="tertiary">
-            Ayarları Düzenle
+            {t("dashboard.config.edit")}
           </s-button>
         </s-box>
       </s-section>
 
       {/* How it works */}
-      <s-section slot="aside" heading="Nasıl Çalışır?">
+      <s-section slot="aside" heading={t("dashboard.how.title")}>
         <s-ordered-list>
-          <s-list-item>Müşteri sipariş verir</s-list-item>
-          <s-list-item>Webhook tetiklenir</s-list-item>
-          <s-list-item>Varyant metafield&apos;ları çekilir</s-list-item>
-          <s-list-item>Raf konumları sipariş notuna yazılır</s-list-item>
+          <s-list-item>{t("dashboard.how.1")}</s-list-item>
+          <s-list-item>{t("dashboard.how.2")}</s-list-item>
+          <s-list-item>{t("dashboard.how.3")}</s-list-item>
+          <s-list-item>{t("dashboard.how.4")}</s-list-item>
         </s-ordered-list>
       </s-section>
 
       {/* Recent Orders */}
-      <s-section heading="Son İşlenen Siparişler">
+      <s-section heading={t("dashboard.orders.title")}>
         {recentOrders.length === 0 ? (
           <s-box padding="large" borderWidth="base" borderRadius="base">
             <s-stack direction="block" gap="base">
-              <s-heading>Henüz işlenen sipariş yok</s-heading>
+              <s-heading>{t("dashboard.orders.empty.title")}</s-heading>
               <s-text>
-                Yeni bir sipariş oluşturulduğunda, raf konumları burada
-                görünecek.
+                {t("dashboard.orders.empty.desc")}
               </s-text>
             </s-stack>
           </s-box>
@@ -245,16 +245,16 @@ export default function Dashboard() {
                   }}
                 >
                   <th style={{ padding: "12px 16px", textAlign: "left" }}>
-                    Sipariş
+                    {t("dashboard.orders.col.order")}
                   </th>
                   <th style={{ padding: "12px 16px", textAlign: "left" }}>
-                    Durum
+                    {t("dashboard.orders.col.status")}
                   </th>
                   <th style={{ padding: "12px 16px", textAlign: "left" }}>
-                    Raf Konumları
+                    {t("dashboard.orders.col.bins")}
                   </th>
                   <th style={{ padding: "12px 16px", textAlign: "left" }}>
-                    Tarih
+                    {t("dashboard.orders.col.date")}
                   </th>
                 </tr>
               </thead>
@@ -284,7 +284,7 @@ export default function Dashboard() {
                     </td>
                     <td style={{ padding: "12px 16px" }}>
                       <s-text>
-                        {new Date(order.createdAt).toLocaleDateString("tr-TR", {
+                        {new Date(order.createdAt).toLocaleDateString(locale || "en-US", {
                           day: "2-digit",
                           month: "2-digit",
                           year: "numeric",

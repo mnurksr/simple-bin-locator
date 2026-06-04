@@ -59,7 +59,7 @@ model AppSettings {
   metafieldNamespace String @default("warehouse")
   metafieldKey      String  @default("bin_location")
   isActive          Boolean @default(true)
-  notePrefix        String  @default("📦 RAF KONUMLARI:")
+  notePrefix        String  @default("📦 BIN LOCATIONS:")
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }
