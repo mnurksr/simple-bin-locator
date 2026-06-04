@@ -4,6 +4,7 @@ import { boundary } from "@shopify/shopify-app-react-router/server";
 import { AppProvider } from "@shopify/shopify-app-react-router/react";
 
 import { authenticate } from "../shopify.server";
+import db from "../db.server";
 
 import { AppProvider as PolarisAppProvider } from "@shopify/polaris";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
@@ -12,19 +13,31 @@ import trTranslations from "@shopify/polaris/locales/tr.json";
 import esTranslations from "@shopify/polaris/locales/es.json";
 import frTranslations from "@shopify/polaris/locales/fr.json";
 import deTranslations from "@shopify/polaris/locales/de.json";
+import { redirect } from "react-router";
 
 export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  await authenticate.admin(request);
+  const { session } = await authenticate.admin(request);
   const locale = new URL(request.url).searchParams.get("locale") || "en";
 
+  const settings = await db.appSettings.findUnique({
+    where: { shop: session.shop }
+  });
+  
+  const isConfigured = !!settings;
+  const pathname = new URL(request.url).pathname;
+
+  if (!isConfigured && !pathname.endsWith("/settings")) {
+    throw redirect("/app/settings");
+  }
+
   // eslint-disable-next-line no-undef
-  return { apiKey: process.env.SHOPIFY_API_KEY || "", locale };
+  return { apiKey: process.env.SHOPIFY_API_KEY || "", locale, isConfigured };
 };
 
 export default function App() {
-  const { apiKey, locale } = useLoaderData<typeof loader>();
+  const { apiKey, locale, isConfigured } = useLoaderData<typeof loader>();
   
   // Select translation based on Shopify locale
   let translations = enTranslations;
@@ -37,10 +50,14 @@ export default function App() {
     <AppProvider embedded apiKey={apiKey}>
       <PolarisAppProvider i18n={translations}>
         <ui-nav-menu>
-          <Link to="/app" rel="home">
-            Anasayfa
-          </Link>
-          <Link to="/app/bins">Raf Yönetimi</Link>
+          {isConfigured && (
+            <>
+              <Link to="/app" rel="home">
+                Anasayfa
+              </Link>
+              <Link to="/app/bins">Raf Yönetimi</Link>
+            </>
+          )}
           <Link to="/app/settings">Ayarlar</Link>
         </ui-nav-menu>
         <Outlet />
